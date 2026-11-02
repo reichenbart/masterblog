@@ -24,7 +24,7 @@ def add():
     if request.method == 'POST':
         posts = load_posts()
 
-        new_id = max((post['id'] for post in posts), default=0) + 1             ## generates unique ID by counting existing, adding 1 to the highest ID
+        new_id = max((post['id'] for post in posts), default=0) + 1
         new_post = {
             'id': new_id,
             'author': request.form.get('author', '').strip(),
@@ -36,6 +36,14 @@ def add():
         save_posts(posts)
         return redirect(url_for('index'))
     return render_template('add.html')
+
+
+@app.route('/delete/<int:post_id>')
+def delete(post_id):
+    posts = load_posts()
+    posts = [post for post in posts if post['id'] != post_id]
+    save_posts(posts)
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
