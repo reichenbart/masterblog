@@ -65,5 +65,19 @@ def update(post_id):
     return render_template('update.html', post=post)
 
 
+@app.route('/like/<int:post_id>', methods=['POST'])
+def like(post_id):                                              #I built a clickable "like-button" that works via POST method, hope this is fine
+    posts = load_posts()
+    post = next((p for p in posts if p['id'] == post_id), None)
+
+    if post is None:
+        return "Post not found", 404
+
+    post['likes'] = post.get('likes', 0) + 1
+    save_posts(posts)
+
+    return redirect(url_for('index'))
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
